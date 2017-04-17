@@ -546,7 +546,7 @@ if ($a == "add") {
 
                 $mediadatavoice .= html_writer::end_tag('h3');
 
-                $mediadatavideo .= html_writer::empty_tag("input", array("type" => "file", "name" => "mov_video", "accept" => "video/*", "capture" => "camcorder"));
+                $mediadatavideo .= html_writer::empty_tag("input", array("type" => "file", "name" => "mov_video", "accept" => "video/*")); //, "capture" => "camcorder"
 
                 $mediadatavoice .= html_writer::script('function formsubmit(link) {$(\'input[name=iphonelink]\').val(link);$(\'#mform1\').submit();}');
 
@@ -554,7 +554,7 @@ if ($a == "add") {
                 $mediadatavoice .= html_writer::empty_tag("input", array("type" => "file", "name" => "mobile_audio", "accept" => "audio/*", "capture" => "microphone"));
                 $mediadatavoice .= html_writer::end_tag('div');
             } else if (videoboard_get_browser() == 'android') {
-                $mediadatavideo .= html_writer::empty_tag("input", array("type" => "file", "name" => "mov_video", "accept" => "video/*", "capture" => "camcorder"));
+                $mediadatavideo .= html_writer::empty_tag("input", array("type" => "file", "name" => "mov_video", "accept" => "video/*")); //, "capture" => "camcorder"
 
                 $mediadatavoice .= html_writer::empty_tag("input", array("type" => "file", "name" => "mobile_audio", "accept" => "audio/*", "capture" => "microphone"));
             } else {
