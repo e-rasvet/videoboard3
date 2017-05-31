@@ -86,7 +86,40 @@ function videoboard_cron()
 
             $DB->update_record("videoboard_process", $add);
 
+define('MULTIPART_BOUNDARY', '--------------------------'.microtime(true));
+$header = 'Content-Type: multipart/form-data; boundary='.MULTIPART_BOUNDARY;
 
+            if (in_array($data->type, json_decode(VIDEOBOARD_AUDIOTYPES)))
+                define('FORM_FIELD', 'mconverter_wav');
+            if (in_array($data->type, json_decode(VIDEOBOARD_VIDEOTYPES)))
+                define('FORM_FIELD', 'mconverter_m4a');
+
+$filename = $from->fullpatch;
+$file_contents = file_get_contents($filename);    
+
+$content =  "--".MULTIPART_BOUNDARY."\r\n".
+            "Content-Disposition: form-data; name=\"".FORM_FIELD."\"; filename=\"".basename($filename)."\"\r\n".
+            "Content-Type: application/zip\r\n\r\n".
+            $file_contents."\r\n";
+
+// add some POST fields to the request too: $_POST['foo'] = 'bar'
+$content .= "--".MULTIPART_BOUNDARY."\r\n".
+            "Content-Disposition: form-data; name=\"name\"\r\n\r\n".
+            "{$data->name}\r\n";
+
+// signal end of request (note the trailing "--")
+$content .= "--".MULTIPART_BOUNDARY."--\r\n";
+
+$context = stream_context_create(array(
+    'http' => array(
+          'method' => 'POST',
+          'header' => $header,
+          'content' => $content,
+    )
+));
+
+file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
+            /*
             $ch = curl_init();
 
             if (in_array($data->type, json_decode(VIDEOBOARD_AUDIOTYPES)))
@@ -98,6 +131,7 @@ function videoboard_cron()
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $datasend);
             curl_exec($ch);
+            */
         } else if ($CFG->videoboard_convert == 3) {
         /*
             $from = videoboard_getfileid($data->itemid);
