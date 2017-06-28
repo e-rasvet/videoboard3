@@ -1194,7 +1194,7 @@ class videoboard_base
      * @param object $cm usually null, but if we have it we pass it to save db access
      * @param object $course usually null, but if we have it we pass it to save db access
      */
-    function videoboard_base($cmid = 'staticonly', $videoboard = NULL, $cm = NULL, $course = NULL)
+    public function __construct($cmid = 'staticonly', $videoboard = NULL, $cm = NULL, $course = NULL)
     {
         global $COURSE, $DB;
 
@@ -1243,6 +1243,11 @@ class videoboard_base
 
         /// Set up things for a HTML editor if it's needed
         $this->defaultformat = editors_get_preferred_format();
+    }
+
+    public function videoboard_base($cmid = 'staticonly', $videoboard = NULL, $cm = NULL, $course = NULL)
+    {
+        self::__construct($cmid = 'staticonly', $videoboard = NULL, $cm = NULL, $course = NULL);
     }
 
     /**
