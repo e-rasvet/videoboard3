@@ -18,7 +18,7 @@
     
     $fs = get_file_storage();
       
-    $file_record = new stdClass;
+    $file_record = new stdClass();
     $file_record->component = 'mod_videoboard';
     $file_record->contextid = $context->id;
     $file_record->userid    = $userid;

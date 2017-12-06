@@ -32,7 +32,7 @@ $context = context_course::instance($course->id);
 require_capability('mod/videoboard:view',$context);
 
 // various strings
-$str = new stdClass;
+$str = new stdClass();
 $str->videoboards = get_string("modulenameplural", "videoboard");
 $str->duedate = get_string('duedate','videoboard');
 $str->duedateno = get_string('duedateno','videoboard');
@@ -92,11 +92,11 @@ foreach( $videoboards as $videoboard ) {
         "id={$videoboard->coursemodule}&amp;edit=1\">{$str->editmysubmission}</a>";
 
     // format options for description
-    $formatoptions = new stdClass;
+    $formatoptions = new stdClass();
     $formatoptions->noclean = true;
 
     // object to hold display data for videoboard
-    $view = new stdClass;
+    $view = new stdClass();
 
     // start to build view object
     $view->section = get_section_name($course, $sections[$videoboard->section]);

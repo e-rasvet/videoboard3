@@ -25,7 +25,7 @@ if (!empty($data) && !empty($value)) {
   }
   
   if (!$videoboardid = $DB->get_record("videoboard_ratings", array("fileid" => $fileid, "userid" => $USER->id))) {
-    $add                = new stdClass;
+    $add                = new stdClass();
     $add->fileid        = $fileid;
     $add->userid        = $USER->id;
     $add->$typesql      = $value;
@@ -50,7 +50,7 @@ if (!empty($data) && !empty($value)) {
       
       if (has_capability('mod/videoboard:teacher', $context)) {
           $catdata  = $DB->get_record("grade_items", array("courseid" => $cm->course, "iteminstance"=> $videoboard->id, "itemmodule" => 'videoboard'));
-          $gradesdata               = new object;
+          $gradesdata               = new stdClass();
           $gradesdata->itemid       = $catdata->id;
           $gradesdata->userid       = $videoboardfiles->userid;
           $gradesdata->rawgrade     = 0;
@@ -112,7 +112,7 @@ if (!empty($data) && !empty($value)) {
 
     if (!$videoboardid = $DB->get_record("videoboard_ratings", array("fileid" => $fileid, "userid" => $USER->id))) {
         
-        $data                = new stdClass;
+        $data                = new stdClass();
         $data->fileid        = $fileid;
         $data->userid        = $USER->id;
         if (!empty($rating)) $data->rating        = $rating;

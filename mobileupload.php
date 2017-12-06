@@ -18,7 +18,7 @@ $context = context_module::instance($aid);
     
     $fs = get_file_storage();
         
-      $file_record = new stdClass;
+      $file_record = new stdClass();
       $file_record->component = 'mod_videoboard';
       $file_record->contextid = $context->id;
       $file_record->userid    = $item->userid;
@@ -42,7 +42,7 @@ $context = context_module::instance($aid);
         $DB->set_field("videoboard_files", "itemoldid", $itemid->get_id(), array("id" => $item->id));
       }
       
-      $add         = new stdClass;
+      $add         = new stdClass();
       $add->itemid = $itemid->get_id();
       $add->type   = mimeinfo('type', $file_record->filename);
       $add->status = 'open';

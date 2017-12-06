@@ -178,7 +178,7 @@ class Zend_View_Helper_HeadMeta extends Zend_View_Helper_Placeholder_Container_S
      */
     public function setCharset($charset)
     {
-        $item = new stdClass;
+        $item = new stdClass();
         $item->type = 'charset';
         $item->charset = $charset;
         $item->content = null;
@@ -423,7 +423,7 @@ class Zend_View_Helper_HeadMeta extends Zend_View_Helper_Placeholder_Container_S
      */
     public function createData($type, $typeValue, $content, array $modifiers)
     {
-        $data            = new stdClass;
+        $data            = new stdClass();
         $data->type      = $type;
         $data->$type     = $typeValue;
         $data->content   = $content;

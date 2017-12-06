@@ -62,6 +62,13 @@ function videoboard_cron()
 {
     global $DB, $CFG;
 
+    $arrContextOptions=array(
+        "ssl"=>array(
+            "verify_peer"=>false,
+            "verify_peer_name"=>false,
+        ),
+    );
+
 
     if ($data = $DB->get_record_sql("SELECT * FROM {videoboard_process} WHERE `status`='open' LIMIT 1")) {
         $CFG->videoboard_convert = 0;
@@ -80,7 +87,7 @@ function videoboard_cron()
         if ($CFG->videoboard_convert == 1) {
             $from = videoboard_getfileid($data->itemid);
 
-            $add = new stdClass;
+            $add = new stdClass();
             $add->id = $data->id;
             $add->status = 'send';
 
@@ -95,7 +102,7 @@ $header = 'Content-Type: multipart/form-data; boundary='.MULTIPART_BOUNDARY;
                 define('FORM_FIELD', 'mconverter_m4a');
 
 $filename = $from->fullpatch;
-$file_contents = file_get_contents($filename);    
+$file_contents = file_get_contents($filename);
 
 $content =  "--".MULTIPART_BOUNDARY."\r\n".
             "Content-Disposition: form-data; name=\"".FORM_FIELD."\"; filename=\"".basename($filename)."\"\r\n".
@@ -115,7 +122,11 @@ $context = stream_context_create(array(
           'method' => 'POST',
           'header' => $header,
           'content' => $content,
-    )
+    ),
+    "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    ),
 ));
 
 file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
@@ -136,7 +147,7 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
         /*
             $from = videoboard_getfileid($data->itemid);
 
-            $add = new stdClass;
+            $add = new stdClass();
             $add->id = $data->id;
             $add->status = 'send';
 
@@ -168,7 +179,7 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
                     $authenticationURL);
 
                 $yt = new Zend_Gdata_YouTube($httpClient, 'VideoBoard', NULL, $CFG->videoboard_youtube_apikey);
-                
+
                 print_r ($yt);
 
                 $myVideoEntry = new Zend_Gdata_YouTube_VideoEntry();
@@ -250,7 +261,7 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
 
             $fs = get_file_storage();
 
-            $file_record = new stdClass;
+            $file_record = new stdClass();
             $file_record->component = 'mod_videoboard';
             $file_record->contextid = $context->id;
             $file_record->userid = $item->userid;
@@ -306,7 +317,7 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
                         $module = $DB->get_record("modules", array("name" => "videoboard"));
                         $instance = $DB->get_record("course_modules", array("module" => $module->id, "instance" => $videoboard->id));
 
-                        $item = new stdClass;
+                        $item = new stdClass();
                         $item->userid = $videoboard->teacher;
                         $item->instance = $instance->id;
                         $item->id = $videoboard->id;
@@ -331,7 +342,7 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
 
             $fs = get_file_storage();
 
-            $file_record = new stdClass;
+            $file_record = new stdClass();
             $file_record->component = 'mod_videoboard';
             $file_record->contextid = $context->id;
             $file_record->userid = $item->userid;
@@ -343,10 +354,10 @@ file_get_contents($CFG->videoboard_convert_url . '/send.php', false, $context);
             $file_record->source = '';
 
             if (in_array($data->type, json_decode(VIDEOBOARD_VIDEOTYPES)) && $CFG->videoboard_video_convert == 1) {
-                $json = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.mp4"));
-                $jsonimg = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.jpg"));
+                $json = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.mp4", false, stream_context_create($arrContextOptions)));
+                $jsonimg = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.jpg", false, stream_context_create($arrContextOptions)));
             } else if ($CFG->videoboard_audio_convert == 1)
-                $json = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.mp3"));
+                $json = json_decode(file_get_contents($CFG->videoboard_convert_url . "/get.php?name={$data->name}.mp3", false, stream_context_create($arrContextOptions)));
 
             if (@!empty($json->url)) {
                 $DB->delete_records('videoboard_process', array('id' => $data->id));
@@ -439,7 +450,7 @@ function videoboard_grading_areas_list()
 /*
 function videoboard_scale_used_anywhere($scaleid) {
     global $DB;
-    
+
     if ($scaleid and $DB->record_exists('videoboard', array('grade' => -$scaleid))) {
         return true;
     } else {
@@ -4596,7 +4607,7 @@ function videoboard_get_browser()
 {
     if (strpos($_SERVER['HTTP_USER_AGENT'], 'Android') !== FALSE)
         return 'android';
-    //elseif(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE) 
+    //elseif(strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== FALSE)
     elseif (preg_match('~MSIE|Internet Explorer~i', $_SERVER['HTTP_USER_AGENT']) || (strpos($_SERVER['HTTP_USER_AGENT'], 'Trident/7.0; rv:11.0') !== false))
         return 'msie';
     elseif (strpos($_SERVER['HTTP_USER_AGENT'], 'Firefox') !== FALSE)
@@ -4610,6 +4621,3 @@ function videoboard_get_browser()
     else
         return 'other';
 }
-
-
-

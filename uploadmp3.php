@@ -28,7 +28,7 @@ $fs = get_file_storage();
 ///Delete old records
 $fs->delete_area_files($context->id, 'mod_videoboard', 'private', $fid);
 
-$file_record = new stdClass;
+$file_record = new stdClass();
 
 if (!empty($id)) {
     $file_record->component = 'mod_videoboard';
